@@ -34,6 +34,9 @@ const Navbar = () =>{
                         <li className="nav-item">
                             <NavLink to={"/contact"} className="nav-link" href="#">Contact</NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink to={"/crud-operation"} className="nav-link" href="#">OperationCrud</NavLink>
+                        </li>
 
                     </ul>
                     <form className="d-flex justify-content-center align-items-center" role="search">
