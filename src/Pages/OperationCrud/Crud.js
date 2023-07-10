@@ -1,17 +1,19 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faTrash, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import {faTrash, faPenToSquare, faEye } from '@fortawesome/free-solid-svg-icons'
 import './crud.scss'
 import {Link, Outlet} from "react-router-dom";
+import Show from "./Show";
+import TrTable from "./TrTable";
 
 const Crud  = () =>{
-    const [user, setUsers] = useState([])
+    const [users, setUsers] = useState([])
+    const [user, setUser] = useState()
     const [laoding, setLoading] = useState(false)
+    const [query, setQuery] = useState("")
     const getFullUsers = async () =>{
-        setLoading(true)
         await axios.get("http://localhost:8000/api/users").then((res)=> setUsers(res.data['hydra:member']) /*console.log(res.data['hydra:member']) */).catch((error)=>console.log(error))
-        setLoading(false)
     }
     const handleDelete = async (id) =>{
         try {
@@ -21,30 +23,46 @@ const Crud  = () =>{
         }
 
     }
+    const handleClick = (id, user) =>{
+        const getOneItem = users.find((user)=>(user.id === id))
+        setUser(getOneItem)
+    }
     useEffect(()=>{
         setLoading(true)
-        getFullUsers()
+        getFullUsers().then((res)=>setLoading(false))
     }, [])
-
+    const SearchData = (data) =>{
+        const Keys = ["firstname", "lastname", "email", "contact"]
+        return data.filter((item)=>
+            Keys.some((key)=>item[key].toLowerCase().includes(query)))
+    }
+    console.log(query)
     return (<>
         <Outlet/>
         <h2>Operations Crud</h2>
-        <div>Totale Items : {user.length}</div>
+        <div className="d-flex justify-content-between align-items-center">
+            <div>Totale Items : {users.length}</div>
+            <div>
+                    <input type="text"
+                           className={"form-control"}
+                           placeholder={"votre recherche"}
+                           onChange={(e)=>setQuery(e.target.value)}
+                    />
+            </div>
+        </div>
+
         <table className="table table-striped">
             <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Contact</th>
                 <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
             {
                 laoding ?
-
                     <tr className={""}>
                         <td colSpan={"6"}>
                             <div className=" chargement d-flex justify-content-center align-items-center">
@@ -54,24 +72,14 @@ const Crud  = () =>{
                         </td>
                     </tr>
                     :
-                user.map((item, index)=>(
-                    <tr key={item.id}>
-                        <td>{index+1}</td>
-                        <td>{item.firstname}</td>
-                        <td>{item.lastname}</td>
-                        <td>{item.email}</td>
-                        <td>{item.contact}</td>
-                        <td>
-                            <FontAwesomeIcon icon={faTrash} color={"#e31818"} onClick={()=>handleDelete(item.id)} className={"delete"}/>
-                            <Link to={`edit/${item.id}`}><FontAwesomeIcon icon={faPenToSquare}  className={"edit mx-2"}/></Link>
-
-                        </td>
-                    </tr>
-                ))
+                    <TrTable data={SearchData(users)} handleDelete={handleDelete} handleClick={handleClick}/>
             }
-
             </tbody>
         </table>
+
+        {
+            user ? <Show user={user}/> : ""
+        }
     </>)
 }
 export default Crud

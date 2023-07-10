@@ -1,41 +1,45 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 
+
 const Edit = () =>{
     const {id} = useParams()
-    const getOneItem = async () =>{
-        try {
-            const data =    await axios.get(`http://localhost:8000/api/users/4}`)
-            console.log(data)
-
-        }catch (error){
-            console.log(error)
-        }
-    }
-
-    const intialState = {
+    const navigate = useNavigate()
+    const inititalState = {
         firstname : "",
-        lastname : "",
-        email: "",
-        contact: ""
+        lastname: "",
+        email:"",
+        contact:""
     }
-    const [item, setItem] = useState(intialState)
-    const handleSubmit = (e) => {
 
-    }
+    const [item, setItem] = useState(inititalState)
+    useEffect(()=>{
+        axios.get(`http://localhost:8000/api/users/${id}`)
+        .then((res)=>setItem(res.data))
+    },[])
+    const handleSubmit = (e) => {
+        e.preventDefault()
+            const updateItem = {
+                firstname : item.firstname,
+                lastname: item.lastname,
+                email:item.email,
+                contact:item.contact
+            }
+       //console.log(JSON.stringify(updateItem))
+            axios.put(`http://localhost:8000/api/users/${id}`, updateItem)
+                .then(()=> navigate("/crud-operation"))
+                .catch((error) => console.log(error))
+        }
     const handleChange = (e) =>{
         setItem((prev)=>({...prev, [e.target.id] : e.target.value}))
     }
-        const{firstname, lastname, contact, email} =item
-    console.log(item)
+        const{firstname, lastname, contact, email} = item
         return ( <div className={"EditForm"}>
-            <form className={""} onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} >
                 <div className="row">
                     <h1 className={"text-center my-4"}>Mise à jour de l'item {id}</h1>
-
                     <div className="row justify-content-center">
-
                         <div className="col-12 col-md-6 col-lg-4">
                             <div className="mb-3">
                                 <label htmlFor="firstname" className="form-label">Firstname</label>
@@ -73,7 +77,7 @@ const Edit = () =>{
                     </div>
                     <div className="row justify-content-center">
                         <div className="col-12 col-md-6 col-lg-4">
-                            <button className={"btn btn-success btn-sm"}>Mettre à jour</button>
+                            <button type={"submit"}  className={"btn btn-success btn-sm"}>Mettre à jour</button>
                         </div>
                     </div>
 
