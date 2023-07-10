@@ -9,7 +9,6 @@ import TrTable from "./TrTable";
 
 const Crud  = () =>{
     const [users, setUsers] = useState([])
-    const [user, setUser] = useState()
     const [laoding, setLoading] = useState(false)
     const [query, setQuery] = useState("")
     const getFullUsers = async () =>{
@@ -23,10 +22,6 @@ const Crud  = () =>{
         }
 
     }
-    const handleClick = (id, user) =>{
-        const getOneItem = users.find((user)=>(user.id === id))
-        setUser(getOneItem)
-    }
     useEffect(()=>{
         setLoading(true)
         getFullUsers().then((res)=>setLoading(false))
@@ -36,7 +31,7 @@ const Crud  = () =>{
         return data.filter((item)=>
             Keys.some((key)=>item[key].toLowerCase().includes(query)))
     }
-    console.log(query)
+
     return (<>
         <Outlet/>
         <h2>Operations Crud</h2>
@@ -62,24 +57,20 @@ const Crud  = () =>{
             </thead>
             <tbody>
             {
-                laoding ?
-                    <tr className={""}>
+                laoding ? <tr className={""}>
                         <td colSpan={"6"}>
                             <div className=" chargement d-flex justify-content-center align-items-center">
                                 <div className="spinner-border" role="status">
                                 </div>
                             </div>
                         </td>
-                    </tr>
-                    :
-                    <TrTable data={SearchData(users)} handleDelete={handleDelete} handleClick={handleClick}/>
+                    </tr>:
+                    <TrTable data={SearchData(users)} handleDelete={handleDelete}/>
             }
             </tbody>
         </table>
 
-        {
-            user ? <Show user={user}/> : ""
-        }
+
     </>)
 }
 export default Crud

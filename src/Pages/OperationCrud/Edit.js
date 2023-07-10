@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 
@@ -77,7 +77,8 @@ const Edit = () =>{
                     </div>
                     <div className="row justify-content-center">
                         <div className="col-12 col-md-6 col-lg-4">
-                            <button type={"submit"}  className={"btn btn-success btn-sm"}>Mettre à jour</button>
+                            <button type={"submit"}  className={"btn btn-success btn-sm me-2"}>Mettre à jour</button>
+                            <Link to={("/crud-operation")} className={"btn btn-primary btn-sm"} >Retour</Link>
                         </div>
                     </div>
 
