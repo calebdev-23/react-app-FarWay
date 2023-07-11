@@ -7,6 +7,7 @@ import Register from "../Pages/Register/Register";
 import Crud from "../Pages/OperationCrud/Crud";
 import Edit from "../Pages/OperationCrud/Edit";
 import Show from "../Pages/OperationCrud/Show";
+import Create from "../Pages/OperationCrud/Create";
 const AllRoutes = () =>{
     return(
         <Routes>
@@ -17,6 +18,7 @@ const AllRoutes = () =>{
             <Route path={"/account/register"} element={<Register/>}/>
             <Route path={"/crud-operation/"}>
                 <Route path={""} element={<Crud/>}/>
+                <Route path={"create"} element={<Create/>}/>
                 <Route path={"edit/:id"} element={<Edit/>}/>
                 <Route path={"show/:id"} element={<Show/>}/>
             </Route>

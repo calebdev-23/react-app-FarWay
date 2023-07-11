@@ -1,7 +1,5 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faTrash, faPenToSquare, faEye } from '@fortawesome/free-solid-svg-icons'
 import './crud.scss'
 import {Link, Outlet} from "react-router-dom";
 import Show from "./Show";
@@ -22,6 +20,16 @@ const Crud  = () =>{
         }
 
     }
+    const [user, setUser] = useState()
+    const handleClik = (id) =>{
+     axios.get(`http://localhost:8000/api/users/${id}`)
+            .then((res)=>{
+                    setUser(res.data)
+                }
+            )
+            .catch((error)=>console.log(error))
+
+    }
     useEffect(()=>{
         setLoading(true)
         getFullUsers().then((res)=>setLoading(false))
@@ -31,6 +39,18 @@ const Crud  = () =>{
         return data.filter((item)=>
             Keys.some((key)=>item[key].toLowerCase().includes(query)))
     }
+    const LoadingComponents = () =>{
+        return (
+            <tr>
+                <td colSpan={"6"}>
+                    <div className=" chargement d-flex justify-content-center align-items-center">
+                        <div className="spinner-border" role="status">
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        )
+    }
 
     return (<>
         <Outlet/>
@@ -38,14 +58,21 @@ const Crud  = () =>{
         <div className="d-flex justify-content-between align-items-center">
             <div>Totale Items : {users.length}</div>
             <div>
-                    <input type="text"
-                           className={"form-control"}
-                           placeholder={"votre recherche"}
-                           onChange={(e)=>setQuery(e.target.value)}
-                    />
+                <Link to="create" className={"btn btn-success btn-sm"}>Create</Link>
+                {
+                    /* <input type="text"
+                          className={"form-control"}
+                          placeholder={"votre recherche"}
+                          onChange={(e)=>setQuery(e.target.value)}
+                   /> */
+                }
             </div>
         </div>
-
+        <input type="text"
+        className={"form-control formSearch my-2"}
+        placeholder={"votre recherche"}
+        onChange={(e)=>setQuery(e.target.value)}
+        />
         <table className="table table-striped">
             <thead>
             <tr>
@@ -57,20 +84,11 @@ const Crud  = () =>{
             </thead>
             <tbody>
             {
-                laoding ? <tr className={""}>
-                        <td colSpan={"6"}>
-                            <div className=" chargement d-flex justify-content-center align-items-center">
-                                <div className="spinner-border" role="status">
-                                </div>
-                            </div>
-                        </td>
-                    </tr>:
-                    <TrTable data={SearchData(users)} handleDelete={handleDelete}/>
+                laoding ? <LoadingComponents/> : <TrTable data={SearchData(users)} handleDelete={handleDelete} handleClick={handleClik}/>
             }
             </tbody>
         </table>
-
-
+    <Show user={user}/>
     </>)
 }
 export default Crud

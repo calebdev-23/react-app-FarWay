@@ -2,26 +2,32 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEye, faPenToSquare, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
 
-const TrTable = ({data, handleDelete}) =>{
+const TrTable = ({data, handleDelete, handleClick}) =>{
     return (<>
             {
-                data.map((item, index)=>(  <tr key={item.id}>
-                    <td>{index+1}</td>
+                data.map((item)=>(  <tr key={item.id}>
+                    <td>{item.id}</td>
                     <td>{item.firstname}</td>
                     <td>{item.lastname}</td>
                     <td>
 
                         <FontAwesomeIcon icon={faTrash} color={"#e31818"} onClick={()=>handleDelete(item.id)} className={"delete"}/>
                         <Link to={`edit/${item.id}`}><FontAwesomeIcon icon={faPenToSquare}  className={"edit mx-2"}/></Link>
-                        <Link to={`show/${item.id}`} type={"button"} className={"border-0 show"} >
+                        <button  className="show" data-bs-toggle="modal" data-bs-target="#showItem" onClick={()=>handleClick(item.id)}>
                             <FontAwesomeIcon icon={faEye} color={"rgba(10,10,10,0.82)"} className={"show"}/>
-                        </Link>
+                        </button>
                     </td>
                 </tr>))
             }
 
             {
                 /*
+
+                 <Link to={`show/${item.id}`} type={"button"} className={"border-0 show"} >
+                        <FontAwesomeIcon icon={faEye} color={"rgba(10,10,10,0.82)"} className={"show"}/>
+                 </Link>
+
+
                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Launch demo modal
                 </button>

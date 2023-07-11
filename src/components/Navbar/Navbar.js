@@ -12,7 +12,7 @@ const Navbar = () =>{
         localStorage.setItem("theme", theme)
     }, [theme]);
     return(
-        <nav className="navbar navbar-expand-lg shadow">
+        <nav className="navbar navbar-expand-lg shadow ">
             <div className="container">
                 <a className="navbar-brand" href="#">
                     <span className={"mot-1 mx-1"}>Caleb</span>
@@ -54,9 +54,9 @@ const Navbar = () =>{
                             <button className="dropdown-toggle" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 { theme === "light" ?
-                                    <img src={dark} alt="" className={"mx-1"} />
+                                    <img src={light} alt="" className={"mx-1"} />
                                     :
-                                    <img src={light} alt="" className={"mx-1"}/>
+                                    <img src={dark} alt="" className={"mx-1"}/>
                                 }
                             </button>
                             <ul className="dropdown-menu">
